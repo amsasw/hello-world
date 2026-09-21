@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="LitePic - 最简单的 GitHub 图床">
+  <title>LitePic · 简单图床</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">LITEPIC</p>
+        <h1>最简单的图床</h1>
+        <p class="sub">拖一张图片，上传到 GitHub，然后复制链接。</p>
+      </div>
+      <a class="repo" href="https://github.com/amsasw/hello-world" target="_blank" rel="noreferrer">GitHub ↗</a>
+    </header>
+
+    <section class="card token-card">
+      <label for="token">GitHub Token</label>
+      <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_...">
+      <p>只保存在当前页面内存中，不写入仓库，也不会保存到浏览器。</p>
+    </section>
+
+    <section class="card uploader">
+      <input id="file" type="file" accept="image/*" hidden>
+      <button id="drop" class="drop" type="button">
+        <span class="plus">＋</span>
+        <strong>拖图片到这里</strong>
+        <small>或者点击选择图片 · 最大 10 MB</small>
+      </button>
+
+      <div id="previewBox" class="preview hidden">
+        <img id="preview" alt="预览">
+        <div class="file-meta">
+          <strong id="fileName"></strong>
+          <span id="fileSize"></span>
+        </div>
+        <button id="upload" class="primary" type="button">上传图片</button>
+      </div>
+
+      <div id="progress" class="progress hidden"><i></i></div>
+      <p id="status" class="status"></p>
+    </section>
+
+    <section id="result" class="card result hidden">
+      <div class="result-head">
+        <div>
+          <p class="eyebrow">UPLOAD COMPLETE</p>
+          <h2>上传成功</h2>
+        </div>
+        <a id="openImage" target="_blank" rel="noreferrer">查看图片 ↗</a>
+      </div>
+
+      <div class="links">
+        <div class="link-row">
+          <span>jsDelivr</span>
+          <input id="cdnUrl" readonly>
+          <button data-copy="cdnUrl" type="button">复制</button>
+        </div>
+        <div class="link-row">
+          <span>Raw</span>
+          <input id="rawUrl" readonly>
+          <button data-copy="rawUrl" type="button">复制</button>
+        </div>
+        <div class="link-row">
+          <span>Markdown</span>
+          <input id="markdownUrl" readonly>
+          <button data-copy="markdownUrl" type="button">复制</button>
+        </div>
+        <div class="link-row">
+          <span>HTML</span>
+          <input id="htmlUrl" readonly>
+          <button data-copy="htmlUrl" type="button">复制</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>图片保存到 <code>images/</code></span>
+      <span>amsasw/hello-world</span>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
