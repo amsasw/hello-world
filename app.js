@@ -1,7 +1,7 @@
 (() => {
 'use strict';
 
-const OWNER='amsasw', REPO='hello-world', BRANCH='main', MAX_BYTES=10*1024*1024;
+const OWNER='amsasw', REPO='hello-world', CODE_BRANCH='main', IMAGE_BRANCH='images', MAX_BYTES=10*1024*1024;
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 
 const token=$('#token'), fileInput=$('#file'), drop=$('#drop'), previewBox=$('#previewBox'), preview=$('#preview');
@@ -104,12 +104,12 @@ uploadBtn.addEventListener('click',async()=>{
     const content=await readAsBase64(uploadFile);
     const r=await fetch('https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+encodeURIComponent(path).replace(/%2F/g,'/'),{
       method:'PUT',headers:{...headers(),'Content-Type':'application/json'},
-      body:JSON.stringify({message:'upload: '+uploadFile.name,content,branch:BRANCH})
+      body:JSON.stringify({message:'upload: '+uploadFile.name,content,branch:IMAGE_BRANCH})
     });
     const data=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(data.message||('HTTP '+r.status));
-    const raw='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+path;
-    const cdn='https://cdn.jsdelivr.net/gh/'+OWNER+'/'+REPO+'@'+BRANCH+'/'+path;
+    const raw='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+IMAGE_BRANCH+'/'+path;
+    const cdn='https://cdn.jsdelivr.net/gh/'+OWNER+'/'+REPO+'@'+IMAGE_BRANCH+'/'+path;
     const alt=safeStem(uploadFile.name);
     $('#cdnUrl').value=cdn;$('#rawUrl').value=raw;$('#markdownUrl').value='!['+alt+']('+cdn+')';$('#htmlUrl').value='<img src="'+cdn+'" alt="'+alt+'">';$('#openImage').href=raw;
     result.classList.remove('hidden');setStatus('上传完成。');showToast('上传成功');loadHistory();
@@ -127,7 +127,7 @@ async function loadHistory(){
   historyStatus.textContent='正在读取仓库中的图片…';
   gallery.innerHTML='';
   try{
-    const br=await fetch('https://api.github.com/repos/'+OWNER+'/'+REPO+'/branches/'+BRANCH,{headers:headers()});
+    const br=await fetch('https://api.github.com/repos/'+OWNER+'/'+REPO+'/branches/'+IMAGE_BRANCH,{headers:headers()});
     if(!br.ok)throw new Error('无法读取分支');
     const bd=await br.json(), treeSha=bd.commit.commit.tree.sha;
     const tr=await fetch('https://api.github.com/repos/'+OWNER+'/'+REPO+'/git/trees/'+treeSha+'?recursive=1',{headers:headers()});
@@ -152,8 +152,8 @@ function renderHistory(){
   const shown=list.slice(0,visibleCount);
   if(!shown.length){gallery.innerHTML='<div class="empty">没有找到图片</div>';showMore.classList.add('hidden');return}
   gallery.innerHTML=shown.map((f,i)=>{
-    const raw='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+BRANCH+'/'+f.path;
-    const cdn='https://cdn.jsdelivr.net/gh/'+OWNER+'/'+REPO+'@'+BRANCH+'/'+f.path;
+    const raw='https://raw.githubusercontent.com/'+OWNER+'/'+REPO+'/'+IMAGE_BRANCH+'/'+f.path;
+    const cdn='https://cdn.jsdelivr.net/gh/'+OWNER+'/'+REPO+'@'+IMAGE_BRANCH+'/'+f.path;
     const name=f.path.split('/').pop();
     return '<article class="gallery-item">'+
       '<a class="thumb" href="'+raw+'" target="_blank" rel="noreferrer"><img loading="lazy" src="'+raw+'" alt=""></a>'+

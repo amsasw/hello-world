@@ -3,6 +3,8 @@ name: Deploy LitePic to GitHub Pages
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "images/**"
   workflow_dispatch:
 
 permissions:
